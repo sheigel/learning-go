@@ -1,15 +1,23 @@
 package calculator
 
-//Add shit together
-func Add(a, b int) int {
-	return a + b
+type Expr interface {
 }
 
+type Var string
 
+type literal float64
 
+type unary struct {
+	op rune
+	x  Expr
+}
 
-//// 1  + 2
-////  0001  
-////  0010
-////     1    -result
-////          -passer
+type binary struct {
+	op   rune
+	x, y Expr
+}
+
+type call struct {
+	fn   string
+	args []Expr–
+}
