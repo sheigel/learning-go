@@ -1,7 +1,7 @@
 package kata
 
 func BouncingBall(height, bounce, window float64) int {
-	switch{
+	switch {
 	case height <= window:
 		return -1
 	case height <= 0:
@@ -10,18 +10,19 @@ func BouncingBall(height, bounce, window float64) int {
 		return -1
 	}
 
-	return 2 + BouncingBall(height, bounce, window)
+	return BallCount(height, bounce, window)
 }
 
 
-
-func Bounces(height, bounce, window float64) int {
+func BallCount(height, bounce, window float64) int {
 	switch{
+	case height == window:
+		return 1
 	case height < window:
-		return 0
+		return -1
 	case height <= 0:
 		return 0
 	}
 
-	return 1 + Bounces(height * bounce, bounce, window)
+	return 2 + BallCount(height * bounce, bounce, window)
 }

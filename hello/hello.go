@@ -1,17 +1,26 @@
 package main
 
-func main() {
-	source := make(chan int)
-	completed := make(chan interface{})
-	go receiver(source, completed)
-	source <- 10
-	source <- 11
-	source <- 12
-	source <- 13
-	close(source)
+import "time"
 
-	 <- completed
-	println("done waiting")
+var a string
+
+func f(asdf string) {
+	print(a)
+	print(asdf)
+}
+
+func hello() {
+	a = "hello, world"
+	go f(a)
+	a="haaaa"
+}
+
+
+func main() {
+
+	hello()
+
+	time.Sleep(3*time.Second)
 }
 
 func receiver(source chan int, completed chan interface{}) {
