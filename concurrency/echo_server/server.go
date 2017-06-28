@@ -17,29 +17,37 @@ func main() {
 		if err != nil {
 			return
 		}
-		copyData(con, os.Stdout)
+		go io.Copy(os.Stdout,con)
+		//copyData(os.Stdout, con)
 	}
 }
 
-func copyData(reader io.Reader, writer io.Writer) {
+func copyData(writer io.Writer, reader io.Reader) {
 	for {
-
-		var buffer []byte
+wt,_:=reader.(io.WriterTo)
+		if wt!=nil {
+			println("reader is a writerto")
+		}
+		rt,_:=writer.(io.ReaderFrom)
+		if rt!=nil {
+			println("writer is a ReaderFrom")
+		}
+		var buffer []byte=make([]byte,1)
 		n, err := reader.Read(buffer)
 
 		if err != nil {
 			fmt.Printf("error reading:%v", err)
 		}
-		if n==0{
+		if n == 0 {
 			continue
 		}
-		fmt.Printf("read #%d bytes:%v, %s", n, buffer, buffer)
+		fmt.Printf("read #%d bytes:%v, %s\n", n, buffer, buffer)
 		write, err := writer.Write(buffer)
 
 		if err != nil {
 			fmt.Printf("error writing:%v", err)
 		}
-		fmt.Printf("wrote #%d bytes:%v, %s", write, buffer, buffer)
+		fmt.Printf("wrote #%d bytes:%v, %s\n", write, buffer, buffer)
 	}
 
 }
