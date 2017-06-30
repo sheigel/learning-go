@@ -5,6 +5,9 @@ import (
 	"io"
 	"os"
 	"fmt"
+	"time"
+	"strings"
+	"bufio"
 )
 
 func main() {
@@ -17,22 +20,43 @@ func main() {
 		if err != nil {
 			return
 		}
-		go io.Copy(os.Stdout,con)
-		//copyData(os.Stdout, con)
+
+		go handleCon(con)
 	}
+}
+func handleCon(con io.ReadCloser) {
+	defer con.Close()
+
+	scanner := bufio.NewScanner(con)
+
+	for scanner.Scan() {
+		go echo(os.Stdout, string(scanner.Bytes()), 1*time.Second)
+	}
+}
+func echo(out io.Writer, str string, timeout time.Duration) {
+	str = str + "\n"
+	out.Write([]byte(strings.ToUpper(str)))
+	time.Sleep(timeout)
+
+	out.Write([]byte(str))
+	time.Sleep(timeout)
+
+	out.Write([]byte(strings.ToLower(str)))
+	time.Sleep(timeout)
+
 }
 
 func copyData(writer io.Writer, reader io.Reader) {
 	for {
-wt,_:=reader.(io.WriterTo)
-		if wt!=nil {
+		wt, _ := reader.(io.WriterTo)
+		if wt != nil {
 			println("reader is a writerto")
 		}
-		rt,_:=writer.(io.ReaderFrom)
-		if rt!=nil {
+		rt, _ := writer.(io.ReaderFrom)
+		if rt != nil {
 			println("writer is a ReaderFrom")
 		}
-		var buffer []byte=make([]byte,1)
+		var buffer []byte = make([]byte, 1)
 		n, err := reader.Read(buffer)
 
 		if err != nil {
