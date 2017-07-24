@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	errs "github.com/pkg/errors"
-	"errors"
 )
 
 func main() {
@@ -11,7 +10,7 @@ func main() {
 	println()
 	fmt.Printf("returned error: %+v\n", returnSimpleError())
 	println()
-	fmt.Printf("wrapped error: %+v\n", wrapperOfCreateError())
+	fmt.Printf("wrapped error: %+v\n", wrappers())
 	println()
 	fmt.Printf("direct stack: %+v\n", stack())
 	println()
@@ -24,7 +23,16 @@ func stackWrapper() error {
 func stack() error {
 	return errs.Errorf("should have stack")
 }
-func wrapperOfCreateError() error {
+func wrappers() error {
+	return errs.Wrap(wrapper3(), "wrapper")
+}
+func wrapper3() error {
+	return errs.Wrap(wrapper2(), "wrapper")
+}
+func wrapper2() error {
+	return errs.Wrap(wrapper1(), "wrapper")
+}
+func wrapper1() error {
 	return errs.Wrap(createSimpleError(), "wrapper")
 }
 func returnSimpleError() error {
@@ -32,5 +40,5 @@ func returnSimpleError() error {
 }
 
 func createSimpleError() error {
-	return errors.New("the simple error")
+	return errs.New("the simple error")
 }

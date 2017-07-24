@@ -27,7 +27,8 @@ func LongEnough(l Lener) bool {
 
 func main() {
 	// A bare value
-	var lst List
+	raw := List([]int{})
+	lst := &raw
 	CountInto(lst, 1, 10) // INVALID: Append has a pointer receiver
 	if LongEnough(lst) { // VALID: Identical receiver type
 		fmt.Printf(" - lst is long enough")
